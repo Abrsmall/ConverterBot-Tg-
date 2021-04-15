@@ -28,15 +28,14 @@ class ValueConverter:
         except ValueError:
             raise APIException(f'Не удалось обработать количество {amount}')
 
-        try:
-            amount > 0
-        except ValueError:
-            raise APIException('Количество валюты не может быть меньше 0')
-
         conv = [base_ticker, quote_ticker]
         q = '_'.join(conv)
         r = requests.get(f'https://free.currconv.com/api/v7/convert?q={q}&compact=ultra&apiKey={APIkey}')
         price = (json.loads(r.content)[q])
+
         result = float(price) * float(amount)
+        if result < 0:
+            raise APIException('Количество валюты не может быть меньше 0')
 
         return result
+
