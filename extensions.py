@@ -28,8 +28,10 @@ class ValueConverter:
         except ValueError:
             raise APIException(f'Не удалось обработать количество {amount}')
 
-        if amount < 0:
-            APIException('Количество валюты не может быть меньше 0')
+        try:
+            amount > 0
+        except ValueError:
+            raise APIException('Количество валюты не может быть меньше 0')
 
         conv = [base_ticker, quote_ticker]
         q = '_'.join(conv)
